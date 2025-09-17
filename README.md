@@ -1,6 +1,6 @@
 # E-Commerce Backend – ProDev BE
 
-This project is part of the **ProDev Backend Engineering program**. It simulates a **real-world e-commerce backend system**, focusing on scalability, security, and performance. The backend provides APIs for managing products, categories, and users, while supporting features like filtering, sorting, and pagination. It also emphasizes database optimization and API documentation, preparing learners for practical backend engineering challenges.
+This project is part of the **ProDev Backend Engineering program**. It simulates a **real-world e-commerce backend system**, focusing on scalability, security, and performance. The backend provides APIs for managing products, categories, and users, while supporting features like filtering, sorting, and pagination. It also emphasizes database optimization and API documentation.
 
 ---
 
@@ -61,7 +61,7 @@ The backend system handles:
 
 ## 📂 Repository Information
 
-- **Repository Name:** `ecommerce-backend`  
+- **Repository Name:** `alx-project-nexus`  
 - **Primary File:** `README.md`  
 - **Deployment:** API hosted with Swagger/OpenAPI documentation.  
 
