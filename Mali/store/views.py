@@ -5,21 +5,20 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from .permissions import RolePermission
 from .serializers import OrderSerializer, ReviewSerializer
-#from rest_framework.pagination import PageNumberPagination
-#from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
 #from drf_yasg.utils import swagger_auto_schema
 #from drf_yasg import openapi
-#from .pagination import StandardResultsSetPagination
+from .pagination import StandardResultsSetPagination
 # Create your views here.
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-""" permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = StandardResultsSetPagination
 
-    list_query_params = [
+"""    list_query_params = [
         openapi.Parameter('parent', openapi.IN_QUERY, description="Filter categories by parent category ID", type=openapi.TYPE_INTEGER),
         openapi.Parameter('search', openapi.IN_QUERY, description="Search categories by name or description", type=openapi.TYPE_STRING),
         openapi.Parameter('ordering', openapi.IN_QUERY, description="Sort categories by fields: name, created_at", type=openapi.TYPE_STRING),
@@ -46,12 +45,12 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [RolePermission]
     allowed_roles =[User.UserRole.SELLER, User.UserRole.ADMIN]
     owner_field = "seller"
-    #pagination_class = StandardResultsSetPagination
-    #filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    #filterSet_fields = ["category","price"]
-    #search_fields = ["name","description"]
-    #ordering_fields = ["price", "created_at"]
-    #ordering = ["-created_at"]
+    pagination_class = StandardResultsSetPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterSet_fields = ["category","price"]
+    search_fields = ["name","description"]
+    ordering_fields = ["price", "created_at"]
+    ordering = ["-created_at"]
 """
     list_query_params = [
         openapi.Parameter('category', openapi.IN_QUERY, description="Filter products by category ID", type=openapi.TYPE_INTEGER),
