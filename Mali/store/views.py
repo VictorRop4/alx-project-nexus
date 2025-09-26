@@ -7,8 +7,8 @@ from .permissions import RolePermission
 from .serializers import OrderSerializer, ReviewSerializer
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
-#from drf_yasg.utils import swagger_auto_schema
-#from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .pagination import StandardResultsSetPagination
 # Create your views here.
 
@@ -18,7 +18,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = StandardResultsSetPagination
 
-"""    list_query_params = [
+    list_query_params = [
         openapi.Parameter('parent', openapi.IN_QUERY, description="Filter categories by parent category ID", type=openapi.TYPE_INTEGER),
         openapi.Parameter('search', openapi.IN_QUERY, description="Search categories by name or description", type=openapi.TYPE_STRING),
         openapi.Parameter('ordering', openapi.IN_QUERY, description="Sort categories by fields: name, created_at", type=openapi.TYPE_STRING),
@@ -38,7 +38,7 @@ class ProductPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = "page_size"
     max_page_size = 100
-"""
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by("-id")
     serializer_class = ProductSerializer
@@ -51,7 +51,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ["name","description"]
     ordering_fields = ["price", "created_at"]
     ordering = ["-created_at"]
-"""
+
     list_query_params = [
         openapi.Parameter('category', openapi.IN_QUERY, description="Filter products by category ID", type=openapi.TYPE_INTEGER),
         openapi.Parameter('price', openapi.IN_QUERY, description="Filter products by price", type=openapi.TYPE_NUMBER),
@@ -69,27 +69,27 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-"""
+
 
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    #permission_classes=[permissions.AllowAny]
+    permission_classes=[permissions.AllowAny]
     serializer_class = RegisterSerializer
 
-""" @swagger_auto_schema(
+    @swagger_auto_schema(
         operation_description="Register a new user account.",
         responses={201: RegisterSerializer()},
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
- """   
+  
 class MeView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-"""    @swagger_auto_schema(
+    @swagger_auto_schema(
         operation_description="Retrieve the profile of the currently authenticated user.",
         responses={200: RegisterSerializer()},
     )
@@ -100,7 +100,7 @@ class MeView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
-"""
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer

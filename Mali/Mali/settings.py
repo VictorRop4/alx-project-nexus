@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'store',
-    #'drf_yasg',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -168,7 +168,7 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
 }
-"""
+
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {
@@ -179,4 +179,3 @@ SWAGGER_SETTINGS = {
         }
     }
 }
-"""
