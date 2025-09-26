@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+env/
+myvenv/
+*.env
+*.venv
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static_root/
+
+# PostgreSQL dump files
+*.sql
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Testing / coverage
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+htmlcov/
+
+# Migrations (optional – keep if you want history in VCS)
+# **/migrations/
+# (uncomment above to ignore all migrations)
+
+# Node modules (if using React/JS frontend in same repo)
+node_modules/
