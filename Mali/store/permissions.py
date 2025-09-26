@@ -1,11 +1,12 @@
-"""
+
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class RolePermission(BasePermission):
     
-    Generic Role-based Permission
-    Pass required roles from the view.
+    """Generic Role-based Permission
+        Pass required roles from the view.
+    """
     
 
     def has_permission(self, request, view):
@@ -33,4 +34,3 @@ class RolePermission(BasePermission):
                 return True  # Non-owner-specific case
 
         return False
-"""

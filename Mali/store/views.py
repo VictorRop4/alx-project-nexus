@@ -3,7 +3,7 @@ from .models import Category, Product, User, Order, Review
 from .serializers import CategorySerializer, ProductSerializer,RegisterSerializer,UserSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-#from .permissions import RolePermission
+from .permissions import RolePermission
 from .serializers import OrderSerializer, ReviewSerializer
 #from rest_framework.pagination import PageNumberPagination
 #from django_filters.rest_framework import DjangoFilterBackend
@@ -43,16 +43,16 @@ class ProductPagination(PageNumberPagination):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by("-id")
     serializer_class = ProductSerializer
-    """"permission_classes = [RolePermission]
+    permission_classes = [RolePermission]
     allowed_roles =[User.UserRole.SELLER, User.UserRole.ADMIN]
     owner_field = "seller"
-    pagination_class = StandardResultsSetPagination
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterSet_fields = ["category","price"]
-    search_fields = ["name","description"]
-    ordering_fields = ["price", "created_at"]
-    ordering = ["-created_at"]
-
+    #pagination_class = StandardResultsSetPagination
+    #filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    #filterSet_fields = ["category","price"]
+    #search_fields = ["name","description"]
+    #ordering_fields = ["price", "created_at"]
+    #ordering = ["-created_at"]
+"""
     list_query_params = [
         openapi.Parameter('category', openapi.IN_QUERY, description="Filter products by category ID", type=openapi.TYPE_INTEGER),
         openapi.Parameter('price', openapi.IN_QUERY, description="Filter products by price", type=openapi.TYPE_NUMBER),
@@ -85,12 +85,12 @@ class RegisterView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-    
+ """   
 class MeView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(
+"""    @swagger_auto_schema(
         operation_description="Retrieve the profile of the currently authenticated user.",
         responses={200: RegisterSerializer()},
     )
@@ -100,21 +100,21 @@ class MeView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
     def get_object(self):
-        return self.request.user"""
-
+        return self.request.user
+"""
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    #permission_classes =[RolePermission]
-    #allowed_roles = [User.UserRole.CUSTOMER]
-   # owner_field = "customer"
+    permission_classes =[RolePermission]
+    allowed_roles = [User.UserRole.CUSTOMER]
+    owner_field = "customer"
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
-   #serializer_class = ReviewSerializer
-    #permission_classes =[RolePermission]
-   # allowed_roles = [User.UserRole.CUSTOMER]
-   # owner_field = "customer"
+    serializer_class = ReviewSerializer
+    permission_classes =[RolePermission]
+    allowed_roles = [User.UserRole.CUSTOMER]
+    owner_field = "customer"
 
 
    

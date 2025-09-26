@@ -1,4 +1,4 @@
-"""from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
@@ -15,4 +15,4 @@ def assign_user_group(sender, instance, created, **kwargs):
             instance.groups.add(group)
         except Group.DoesNotExist:
             # Optionally log or raise warning
-            print(f"Group '{group_name}' does not exist. Please run migrations.")"""
+            print(f"Group '{group_name}' does not exist. Please run migrations.")
