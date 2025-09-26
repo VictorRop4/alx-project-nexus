@@ -37,7 +37,7 @@ class CustomerProfile(models.Model):
 # Catalog (Categories & Products)
 # -----------------------------
 class Category(models.Model):
-    name = models.CharField(max_length=200, unique=True,db_index=True)
+    name = models.CharField(max_length=200, unique=True,db_index=True) # Database indexing
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     parent = models.ForeignKey(
@@ -46,6 +46,7 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+# Database indexing
     class Meta:
         indexes = [
             models.Index(fields=["name"]),
@@ -58,16 +59,17 @@ class Category(models.Model):
 class Product(models.Model):
     sku = models.CharField(max_length=100, unique=True)  # Stock Keeping Unit
     slug = models.SlugField(unique=True)
-    name = models.CharField(max_length=255,db_index=True)
+    name = models.CharField(max_length=255,db_index=True) # Database indexing
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10, default="KES")
     stock_quantity = models.IntegerField()
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True,db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True,db_index=True) # Database indexing
     updated_at = models.DateTimeField(auto_now=True)
 
+# Database indexing
     class Meta:
         indexes = [
             models.Index(fields=["price"]),
