@@ -10,31 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-import environ
+import dj_database_url
+from pathlib import Path
 
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#Initialize enviroment variables
+SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
+ALLOWED_HOSTS = ["*"]  # Later restrict to your Render domain
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# Database
+DATABASES = {
+    "default": dj_database_url.config(
+        default=f"postgres://{os.getenv('DB_USER','postgres')}:{os.getenv('DB_PASSWORD','password')}@{os.getenv('DB_HOST','localhost')}:{os.getenv('DB_PORT','5432')}/{os.getenv('DB_NAME','mali_db')}",
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
-
-# Allow hosts (split string into list)
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1", "localhost"])
+# Static files
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # Application definition
@@ -51,11 +50,14 @@ INSTALLED_APPS = [
     'django_filters',
     'store',
     'drf_yasg',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -68,10 +70,11 @@ ROOT_URLCONF = 'Mali.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -82,21 +85,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Mali.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST':env('POSTGRES_HOST', default='localhost'),
-        'PORT': env('POSTGRES_PORT', default='5432'),
-    }
-   
-}
 
 
 # Password validation
@@ -130,10 +118,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -179,3 +164,6 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+# CORS
+CORS_ALLOW_ALL_ORIGINS = True

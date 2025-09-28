@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.db import models
+from decimal import Decimal
 
 # -----------------------------
 # User & Profile
@@ -68,6 +71,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True,db_index=True) # Database indexing
     updated_at = models.DateTimeField(auto_now=True)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
 
 # Database indexing
     class Meta:
@@ -75,6 +79,16 @@ class Product(models.Model):
             models.Index(fields=["price"]),
             models.Index(fields=["created_at"]),
         ]
+
+    def update_average_rating(self):
+        reviews = self.reviews.all()
+        if reviews.exists():
+            avg = reviews.aggregate(models.Avg("rating"))["rating__avg"]
+            self.average_rating = round(avg, 2)
+        else:
+            self.average_rating = 0.00
+        self.save(update_fields=["average_rating"])
+
 
     def __str__(self):
         return self.name
@@ -104,6 +118,7 @@ class CartItem(models.Model):
 # -----------------------------
 # Orders & Order Items
 # -----------------------------
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -113,24 +128,36 @@ class Order(models.Model):
         ("cancelled", "Cancelled"),
     ]
 
-    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name="orders")
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders")
+    products = models.ManyToManyField("Product", through="OrderItem")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    mpesa_receipt = models.CharField(max_length=100, blank=True, null=True)
+
+    def calculate_total(self):
+        total = sum([item.quantity * item.product.price for item in self.items.all()])
+        self.total_amount = total
+        self.save()
+        return total
 
     def __str__(self):
         return f"Order {self.id} - {self.status}"
 
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # snapshot of price at checkout
+    product = models.ForeignKey("Product", on_delete=models.SET_NULL, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # snapshot at checkout
+
+    def save(self, *args, **kwargs):
+        if not self.price and self.product:
+            self.price = self.product.price
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.quantity} × {self.product}"
+        return f"{self.quantity} × {self.product.name if self.product else 'Deleted Product'}"
 
 
 # -----------------------------
@@ -158,7 +185,6 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment {self.id} for Order {self.order.id}"
-
 
 # -----------------------------
 # Shipping

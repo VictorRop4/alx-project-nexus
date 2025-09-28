@@ -1,10 +1,7 @@
 Django>=5.0,<6.0
-djangorestframework>=3.15.0
-djangorestframework-simplejwt>=5.3.1
-django-filter>=24.2
-drf-yasg>=1.21.7
-psycopg2-binary>=2.9.9
-
-# Optional but recommended
-python-decouple>=3.8        # for environment variable management
-gunicorn>=23.0.0           
+gunicorn
+psycopg2-binary
+dj-database-url
+python-decouple
+whitenoise
+djangorestframework
