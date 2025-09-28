@@ -25,7 +25,7 @@ ALLOWED_HOSTS = ["*"]  # Later restrict to your Render domain
 # Database
 DATABASES = {
     "default": dj_database_url.config(
-        default=f"postgres://{os.getenv('DB_USER','postgres')}:{os.getenv('DB_PASSWORD','password')}@{os.getenv('DB_HOST','localhost')}:{os.getenv('DB_PORT','5432')}/{os.getenv('DB_NAME','mali_db')}",
+        default=os.getenv("DATABASE_URL"),  # Render sets this automatically
         conn_max_age=600,
         ssl_require=True
     )
